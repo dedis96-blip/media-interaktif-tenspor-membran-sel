@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Media Interaktif Bioproses Pada Sel</title>
+<style>
+:root{--p:#1f0276;--l:#f3f0ff;--bd:#ddd5fa}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",system-ui,Roboto,sans-serif;background:#fff;color:#222;line-height:1.55}
+h1,h2,h3{margin:0 0 8px;color:var(--p)}
+header,footer{background:var(--p);color:#fff;padding:16px 20px}
+header h1{color:#fff;font-size:clamp(1.25rem,4.5vw,2rem)}
+.inf{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:.82rem;text-align:left}
+.inf div{margin:2px 0}
+footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:.85rem}
+#app{display:none;min-height:100vh;flex-direction:column}#app.on{display:flex}
+nav{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:#fff;z-index:5}
+.b{min-height:48px;padding:10px 20px;border:2px solid var(--p);background:#fff;color:var(--p);border-radius:12px;font-weight:600;font-size:1rem;font-family:inherit;cursor:pointer;transition:.2s;white-space:nowrap}
+.b:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 10px #1f027633}
+.b.on,.b:active:not(:disabled){background:var(--p);color:#fff}
+.b:disabled{opacity:.4;cursor:not-allowed}
+.b:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #8a6cff;outline-offset:2px}
+main{flex:1;padding:16px;max-width:980px;width:100%;margin:0 auto}
+section{display:none}section.on{display:block;animation:in .45s}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.card{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 4px 14px #1f02760f}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.sub{margin:8px 0}
+svg{width:100%;max-width:340px;border-radius:12px;display:block;margin:6px 0}
+cv,canvas{max-width:100%}
+#cv{width:100%;max-width:420px;border:2px solid var(--bd);border-radius:12px;background:#fff}
+.ex{display:none;background:var(--l);border-left:5px solid var(--p);padding:10px 14px;border-radius:8px;margin-top:10px}
+.ex.on{display:block;animation:in .35s}
+.bar{height:10px;background:var(--l);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--p);transition:width .4s}
+.op{display:flex;align-items:center;gap:10px;padding:12px;margin:6px 0;border:2px solid var(--bd);border-radius:12px;cursor:pointer;transition:.15s}
+.op:hover{border-color:var(--p);background:var(--l)}
+.op input{width:20px;height:20px;accent-color:var(--p)}
+textarea,input[type=text],#gf input{width:100%;padding:12px;border:2px solid var(--bd);border-radius:10px;font:inherit}
+.fb{font-weight:600;margin:4px 0}.ok{color:#127a3a}.no{color:#b3261e}
+table{border-collapse:collapse;width:100%;font-size:.9rem}td,th{border:1px solid var(--bd);padding:6px 8px;text-align:left}th{background:var(--l)}
+#identityGate{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;z-index:50;overflow:auto}
+#gf{width:100%;max-width:440px;border-top:8px solid var(--p);animation:in .6s}
+#gf label{display:block;margin:12px 0;font-weight:600}
+#gf input.bad{border-color:#b3261e}
+.dd .zs{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}
+.zn{min-height:64px;border:2px dashed var(--p);border-radius:12px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;background:#fbfaff}
+.zn.pool{background:#fff;border-color:#bbb}.zt{width:100%;font-weight:700;color:var(--p)}
+.zn.one{display:inline-flex;min-width:100px;min-height:36px;padding:2px 6px;vertical-align:middle;align-items:center}
+.it{padding:8px 12px;background:var(--p);color:#fff;border-radius:10px;cursor:grab;font-size:.9rem;user-select:none;transition:.15s}
+.it.sel{outline:3px solid #ffb703;transform:scale(1.06)}.it.g{background:#127a3a}.it.r{background:#b3261e}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.mc{perspective:600px;cursor:pointer}.mc .in{position:relative;height:90px;transition:transform .5s;transform-style:preserve-3d}
+.mc.f .in,.mc.m .in{transform:rotateY(180deg)}
+.fr,.bk{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:12px;padding:6px;font-size:.8rem;backface-visibility:hidden;font-weight:600}
+.fr{background:var(--p);color:#fff;font-size:1.6rem}.bk{background:var(--l);border:2px solid var(--p);color:var(--p);transform:rotateY(180deg)}
+.mc.m .bk{background:#d9f5e3;border-color:#127a3a;color:#127a3a}
+.big{font-size:2.4rem;font-weight:800;color:var(--p)}
+@media(max-width:600px){.inf{grid-template-columns:1fr}.b{padding:10px 14px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="identityGate">
+<form id="gf" class="card">
+<h2>Selamat datang 👋</h2>
+<p>Isi identitasmu terlebih dahulu untuk memulai belajar.</p>
+<label>Nama lengkap<input id="nm" autocomplete="name" placeholder="Nama kamu"></label>
+<label>NISN (10 digit)<input id="ns" inputmode="numeric" maxlength="10" placeholder="0012345678"></label>
+<label>Kelas<input id="kl" placeholder="Contoh: 11 IPA 1"></label>
+<small id="er" class="no"></small>
+<button class="b" id="go" disabled style="width:100%;margin-top:10px">Mulai</button>
+</form>
+</div>
+
+<div id="app">
+<header>
+<h1>Media Interaktif “Bioproses Pada Sel”</h1>
+<div class="inf">
+<div><div>Mata Pelajaran: Biologi</div><div>Unit: Pergerakan Zat melalui Membran Sel</div><div>Konsep: Transpor Pasif dan Transpor Aktif</div></div>
+<div><div>Guru: Dedi Anto S., S.Pd., M.Pd</div><div>Kelas: 11 SMA</div><div>Fase: F</div></div>
+</div>
+</header>
+<nav id="nav"></nav>
+<main>
+<section id="s0">
+<h2>Teori: Transpor Melalui Membran Sel</h2>
+<div class="card"><h3>🔬 Simulasi partikel</h3>
+<p>Bandingkan transpor pasif (tanpa energi) dan transpor aktif (memakai ATP) melalui celah protein di membran.</p>
+<canvas id="cv" width="300" height="150"></canvas>
+<div><b id="cnt"></b></div>
+<div class="row"><button class="b" id="sp">Transpor pasif</button><button class="b" id="sa">Transpor aktif (ATP)</button></div>
+<small>Pasif: partikel menyebar dari ramai ke sepi. Aktif: pompa menarik partikel ke sisi yang sudah ramai.</small></div>
+<div class="row" id="tc"></div>
+<div id="tb"></div>
+</section>
+
+<section id="s1">
+<h2>Video Pembelajaran</h2>
+<div class="card">
+<svg viewBox="0 0 340 170"><rect width="340" height="170" fill="#1f0276"/><circle cx="170" cy="85" r="40" fill="#fff"/><path d="M158 63L194 85L158 107Z" fill="#1f0276"/></svg>
+<p>Video ini menjelaskan bagaimana zat bergerak masuk dan keluar sel melalui membran, mulai dari difusi dan osmosis sampai pompa ion dan transpor vesikel. Perhatikan perbedaan arah gerak zat dan kebutuhan energinya.</p>
+<p><b>Sambil menonton, jawab:</b></p>
+<ol><li>Zat apa yang bergerak tanpa ATP?</li><li>Kapan sel membutuhkan ATP?</li><li>Apa contoh transpor di tubuh manusia?</li></ol>
+<a class="b" style="display:inline-flex;align-items:center;text-decoration:none" href="https://youtu.be/sJ7HuPBhkZ4?si=UMF9MtCCzvOgqK7m" target="_blank" rel="noopener">▶ Tonton di YouTube</a>
+</div>
+</section>
+
+<section id="s2"><h2>LKPD</h2><div id="lk"></div></section>
+
+<section id="s3">
+<h2>Games</h2>
+<div class="row" id="gt"></div>
+<div id="g0" class="card dd gp"></div>
+<div id="g1" class="card dd gp"></div>
+<div id="g2" class="card gp"></div>
+</section>
+
+<section id="s4"><h2>Evaluasi</h2><div id="ev"></div></section>
+<section id="s5"><h2>Refleksi</h2><div id="rf"></div></section>
+</main>
+<footer><div id="ft"></div><div>© 2025 Dikembangkan oleh Dedi Anto S., S.Pd., M.Pd</div></footer>
+</div>
+
+<script>
+const SHEET_URL=""; // Isi dengan URL Google Apps Script (Web App) agar data terkirim ke spreadsheet
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const shuf=a=>[...a].sort(()=>Math.random()-.5);
+const ls={g:(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let U=ls.g("bioUser",null),cur=null;
+
+/* ---------- Data penggunaan ---------- */
+function log(d){const r={waktu:new Date().toLocaleString("id-ID"),...U,...d};const a=ls.g("bioLog",[]);a.push(r);ls.s("bioLog",a);
+ if(SHEET_URL)fetch(SHEET_URL,{method:"POST",mode:"no-cors",body:JSON.stringify(r)}).catch(()=>{})}
+function csv(){const a=ls.g("bioLog",[]);if(!a.length)return alert("Belum ada data.");const k=[...new Set(a.flatMap(Object.keys))];
+ const t=[k.join(",")].concat(a.map(r=>k.map(c=>'"'+String(r[c]??"").replace(/"/g,'""')+'"').join(","))).join("\n");
+ const l=document.createElement("a");l.href=URL.createObjectURL(new Blob([t],{type:"text/csv"}));l.download="data-bioproses.csv";l.click()}
+
+/* ---------- Form identitas ---------- */
+function chk(){const n=$("#ns").value,okN=/^\d{10}$/.test(n);
+ $("#ns").classList.toggle("bad",!!n&&!okN);$("#er").textContent=n&&!okN?"NISN harus 10 digit angka.":"";
+ $("#go").disabled=!($("#nm").value.trim().length>=3&&okN&&$("#kl").value.trim())}
+["nm","ns","kl"].forEach(i=>$("#"+i).addEventListener("input",()=>{if(i=="ns")$("#ns").value=$("#ns").value.replace(/\D/g,"");chk()}));
+if(U){$("#nm").value=U.nama;$("#ns").value=U.nisn;$("#kl").value=U.kelas;chk()}
+$("#gf").onsubmit=e=>{e.preventDefault();U={nama:$("#nm").value.trim(),nisn:$("#ns").value,kelas:$("#kl").value.trim()};ls.s("bioUser",U);
+ $("#identityGate").style.display="none";$("#app").classList.add("on");
+ $("#ft").textContent=`👤 ${U.nama} | NISN ${U.nisn} | Kelas ${U.kelas}`;log({aktivitas:"Masuk"});init()};
+
+/* ---------- Navigasi ---------- */
+const MENU=["Teori","Video","LKPD","Games","Evaluasi","Refleksi"];
+function show(i){$$("#nav .b").forEach((b,j)=>b.classList.toggle("on",i==j));$$("section").forEach((s,j)=>s.classList.toggle("on",i==j));scrollTo({top:0,behavior:"smooth"});
+ if(i==0)simStep();if(i==4&&!ev.run)evIntro()}
+function init(){$("#nav").innerHTML="";MENU.forEach((m,i)=>{const b=document.createElement("button");b.className="b";b.textContent=m;b.onclick=()=>show(i);$("#nav").appendChild(b)});
+ theory();simInit("p");lkpd();games();refl();show(0)}
+
+/* ---------- Teori ---------- */
+const D=(xs,y,c)=>xs.map(x=>`<circle cx="${x}" cy="${y}" r="5" fill="${c}"/>`).join("");
+const A=(x,a,b)=>{const d=b>a?-9:9;return `<path d="M${x} ${a}V${b}M${x-7} ${b+d}L${x} ${b}L${x+7} ${b+d}" fill="none" stroke="#333" stroke-width="3"/>`};
+const MB=`<rect width="200" height="100" fill="#f3f0ff"/><rect y="40" width="200" height="20" fill="#cfc4f5"/>`+[...Array(10)].map((_,i)=>`<circle cx="${10+i*20}" cy="40" r="6" fill="#1f0276"/><circle cx="${10+i*20}" cy="60" r="6" fill="#1f0276"/>`).join("");
+const CH=`<rect x="82" y="34" width="36" height="32" fill="#f3f0ff"/><rect x="76" y="32" width="8" height="36" rx="3" fill="#27ae60"/><rect x="116" y="32" width="8" height="36" rx="3" fill="#27ae60"/>`;
+const SV={
+mem:MB+`<rect x="60" y="30" width="14" height="40" rx="6" fill="#27ae60"/><rect x="130" y="34" width="14" height="32" rx="6" fill="#e67e22"/>`,
+dif:MB+D([20,50,80,120,150,180],15,"#e67e22")+D([60,140],88,"#e67e22")+A(100,22,84),
+ost:MB+D([20,60,140,175],15,"#2980b9")+D([30,70,110,150,180,100],88,"#e74c3c")+A(40,24,84),
+fac:MB+CH+D([20,50,80,120,150,180],15,"#e67e22")+D([60,140],88,"#e67e22")+A(100,20,84),
+act:MB+CH+D([20,50,80,120,150,180],88,"#e74c3c")+D([60,140],15,"#e74c3c")+A(100,84,20)+`<text x="128" y="58" font-size="11" font-weight="700" fill="#c0392b">ATP</text>`,
+ves:MB+`<circle cx="100" cy="24" r="16" fill="none" stroke="#1f0276" stroke-width="3"/>`+D([94,106,100],24,"#e67e22")+A(100,45,70)+`<circle cx="100" cy="82" r="10" fill="#e67e22"/>`};
+const T=[
+["Membran Sel","mem","Membran sel tersusun atas lapisan ganda fosfolipid (model mosaik cair) yang ditanami protein, kolesterol, dan glikoprotein. Sifatnya semipermeabel: hanya zat tertentu yang bebas melintas.",["Fosfolipid: kepala hidrofilik, ekor hidrofobik","Protein integral dan perifer: kanal, pembawa, reseptor","Kolesterol menjaga kelenturan membran"],"Teh celup: air dan zat teh keluar melalui kantong, daun teh tertahan, seperti membran menyeleksi zat."],
+["Difusi","dif","Perpindahan zat dari konsentrasi tinggi ke rendah mengikuti gradien konsentrasi, tanpa ATP, sampai seimbang. Laju difusi dipengaruhi suhu, gradien konsentrasi, luas permukaan, dan ukuran molekul.",["Molekul kecil nonpolar (O₂, CO₂) langsung melewati fosfolipid","Termasuk transpor pasif"],"Aroma parfum menyebar di kelas, gula menyebar di teh, dan O₂ masuk ke darah di alveolus paru-paru."],
+["Osmosis","ost","Osmosis adalah difusi air melalui membran semipermeabel dari larutan hipotonis (zat terlarut rendah) ke hipertonis (zat terlarut tinggi).",["Hipotonis: sel hewan membengkak/lisis, sel tumbuhan turgid","Hipertonis: sel hewan krenasi, sel tumbuhan plasmolisis","Isotonis: tidak ada perubahan bersih"],"Sayur layu menjadi segar setelah direndam air. Acar dan ikan asin awet karena garam menarik air dari sel mikroba."],
+["Difusi Terfasilitasi","fac","Zat polar atau ion tidak dapat melewati fosfolipid, sehingga dibantu protein kanal atau protein pembawa. Tetap searah gradien dan tanpa ATP.",["Kanal ion: lorong khusus ion","Protein pembawa: berubah bentuk saat mengangkut zat"],"Glukosa masuk sel otot dan sel darah merah lewat protein pembawa GLUT. Insulin meningkatkan jumlah GLUT di membran."],
+["Transpor Aktif","act","Pergerakan zat melawan gradien konsentrasi dari konsentrasi rendah ke tinggi. Memerlukan ATP dan protein pembawa (pompa).",["Pompa Na⁺-K⁺: 3 Na⁺ keluar, 2 K⁺ masuk per ATP","Sel akar menyerap ion mineral dari tanah","Sel usus menyerap glukosa"],"Akar tanaman tetap menyerap nutrien dari tanah yang konsentrasinya lebih rendah daripada di dalam akar."],
+["Endositosis dan Eksositosis","ves","Zat berukuran besar diangkut dengan vesikel dan memerlukan energi. Endositosis memasukkan zat (fagositosis: memakan partikel padat, pinositosis: meminum cairan), eksositosis mengeluarkan zat.",["Fagositosis oleh leukosit dan amoeba","Eksositosis: sel pankreas melepas insulin, sel kelenjar melepas enzim"],"Sel darah putih menelan bakteri penyebab infeksi, lalu mencernanya dengan lisosom."]];
+function theory(){$("#tc").innerHTML="";T.forEach((t,i)=>{const b=document.createElement("button");b.className="b";b.textContent=t[0];b.onclick=()=>topic(i);$("#tc").appendChild(b)});topic(0)}
+function topic(i){const t=T[i];$$("#tc .b").forEach((b,j)=>b.classList.toggle("on",i==j));
+ $("#tb").innerHTML=`<div class="card" style="animation:in .4s"><h3>${t[0]}</h3><svg viewBox="0 0 200 100">${SV[t[1]]}</svg><p>${t[2]}</p><ul>${t[3].map(x=>`<li>${x}</li>`).join("")}</ul><button class="b" id="exb">Lihat contoh kontekstual</button><div class="ex" id="exd">🌱 ${t[4]}</div></div>`;
+ $("#exb").onclick=()=>$("#exd").classList.toggle("on");log({aktivitas:"Teori: "+t[0]})}
+/* Simulasi */
+let sm=[],mode="p";
+function simInit(m){mode=m;$("#sp").classList.toggle("on",m=="p");$("#sa").classList.toggle("on",m=="a");const n=m=="p"?[45,15]:[30,30];sm=[];
+ for(let s=0;s<2;s++)for(let i=0;i<n[s];i++)sm.push({x:s?160+Math.random()*130:10+Math.random()*130,y:10+Math.random()*130,vx:Math.random()*2-1,vy:Math.random()*2-1})}
+$("#sp").onclick=()=>simInit("p");$("#sa").onclick=()=>simInit("a");
+function simStep(){if(!$("#s0").classList.contains("on"))return;const x=$("#cv").getContext("2d");x.clearRect(0,0,300,150);
+ x.fillStyle="#cfc4f5";x.fillRect(146,0,8,58);x.fillRect(146,92,8,58);x.fillStyle="#27ae60";x.fillRect(143,58,14,5);x.fillRect(143,87,14,5);
+ let L=0;sm.forEach(p=>{p.vx+=Math.random()*.4-.2;p.vy+=Math.random()*.4-.2;const s=Math.hypot(p.vx,p.vy);if(s>1.6){p.vx*=1.6/s;p.vy*=1.6/s}
+  const g=p.y>60&&p.y<90;if(mode=="a"&&g&&Math.abs(p.x-150)<16)p.vx=-1.5;
+  const o=p.x;p.x+=p.vx;p.y+=p.vy;if(p.x<4||p.x>296)p.vx*=-1;if(p.y<4||p.y>146)p.vy*=-1;
+  if(p.x>146&&p.x<154&&!g){p.x=o<150?145:155;p.vx*=-1}
+  if(p.x<150)L++;x.fillStyle=mode=="a"?"#e74c3c":"#e67e22";x.beginPath();x.arc(p.x,p.y,4,0,7);x.fill()});
+ $("#cnt").textContent=`Kiri: ${L} | Kanan: ${sm.length-L}`;requestAnimationFrame(simStep)}
+
+/* ---------- LKPD ---------- */
+const L=[
+{t:"Tujuan Pembelajaran",x:"<ol><li>Menjelaskan mekanisme transpor pasif (difusi, osmosis, difusi terfasilitasi).</li><li>Menjelaskan transpor aktif dan transpor vesikel.</li><li>Membedakan transpor pasif dan aktif dari data percobaan.</li></ol>",q:[]},
+{t:"1. Stimulation (Pemberian Rangsangan)",x:"Ibu merendam irisan kentang dengan massa sama ke dalam tiga gelas: air murni, larutan garam 0,9%, dan larutan garam 10%. Setelah 30 menit, ukuran kentang berbeda-beda. Sayur layu juga menjadi segar jika direndam air.",q:[{q:"Menurutmu, mengapa sayur layu bisa segar kembali setelah direndam air?"}]},
+{t:"2. Problem Statement (Identifikasi Masalah)",x:"Dari fenomena tadi, rumusan masalah yang paling tepat adalah...",q:[{q:"Pilih rumusan masalah:",o:["Mengapa kentang berwarna kuning?","Bagaimana konsentrasi larutan memengaruhi arah perpindahan air pada sel kentang?","Berapa harga garam?"],a:1}]},
+{t:"3. Data Collection (Pengumpulan Data)",x:`<table><tr><th>Larutan</th><th>Massa awal (g)</th><th>Massa akhir (g)</th></tr><tr><td>Air murni</td><td>5,0</td><td>5,8</td></tr><tr><td>Garam 0,9%</td><td>5,0</td><td>5,0</td></tr><tr><td>Garam 10%</td><td>5,0</td><td>4,1</td></tr></table>`,q:[{q:"Pada larutan mana kentang menyerap air (massa bertambah)?",o:["Air murni","Garam 0,9%","Garam 10%"],a:0}]},
+{t:"4. Data Processing (Pengolahan Data)",x:"Hitung perubahan massa = massa akhir − massa awal.",q:[{q:"Perubahan massa di larutan garam 10%:",o:["+0,8 g","0 g","−0,9 g"],a:2},{q:"Perubahan massa di air murni:",o:["+0,8 g","0 g","−0,9 g"],a:0}]},
+{t:"5. Verification (Pembuktian)",x:"Bandingkan hasil dengan teori osmosis.",q:[{q:"Larutan garam 10% bersifat ... terhadap sel kentang.",o:["Hipotonis","Isotonis","Hipertonis"],a:2},{q:"Air bergerak dari konsentrasi zat terlarut ... ke ...",o:["rendah ke tinggi","tinggi ke rendah","tidak berpindah"],a:0}]},
+{t:"6. Generalization (Simpulan)",x:"Rangkum temuanmu.",q:[{q:"Tuliskan simpulan: perbedaan transpor pasif dan transpor aktif beserta satu contoh masing-masing."}]}];
+let li=0,la=ls.g("bioLkpd",{});
+function fbk(k){const [i,j]=k.split("_"),q=L[i].q[j],e=$("#f"+k);if(!e||la[k]==null)return;const ok=la[k]==q.a;e.className="fb "+(ok?"ok":"no");e.textContent=ok?"✔ Benar!":"✘ Belum tepat, coba lagi."}
+function lkpd(){const s=L[li];let h=`<div class="bar"><i style="width:${(li+1)/L.length*100}%"></i></div><div class="card"><h3>${s.t}</h3><div>${s.x}</div>`;
+ s.q.forEach((q,j)=>{const k=li+"_"+j;h+=`<p><b>${q.q}</b></p>`;
+  if(q.o){q.o.forEach((o,m)=>h+=`<label class="op"><input type="radio" name="q${k}" value="${m}" ${la[k]==m?"checked":""}>${o}</label>`);h+=`<div class="fb" id="f${k}"></div>`}
+  else h+=`<textarea rows="3" data-k="${k}" placeholder="Tulis jawabanmu...">${la[k]||""}</textarea>`});
+ h+=`</div><div class="row"><button class="b" id="lp" ${li?"":"disabled"}>Sebelumnya</button><button class="b" id="ln">${li==L.length-1?"Selesai":"Berikutnya"}</button></div>`;
+ $("#lk").innerHTML=h;
+ $$("#lk input").forEach(r=>r.onchange=()=>{const k=r.name.slice(1);la[k]=+r.value;ls.s("bioLkpd",la);fbk(k)});
+ $$("#lk textarea").forEach(t=>t.oninput=()=>{la[t.dataset.k]=t.value;ls.s("bioLkpd",la)});
+ s.q.forEach((q,j)=>q.o&&fbk(li+"_"+j));
+ $("#lp").onclick=()=>{li--;lkpd()};
+ $("#ln").onclick=()=>{if(li<L.length-1){li++;lkpd()}else{log({aktivitas:"LKPD selesai"});$("#lk").innerHTML=`<div class="card" style="text-align:center"><div class="big">🎉</div><h3>LKPD selesai!</h3><p>Jawabanmu tersimpan. Lanjut ke Games atau Evaluasi.</p><button class="b" id="lr">Ulangi LKPD</button></div>`;$("#lr").onclick=()=>{li=0;la={};ls.s("bioLkpd",la);lkpd()}}}}
+
+/* ---------- Drag & drop helper (mouse + sentuhan via ketuk) ---------- */
+function mkDD(root){
+ root.querySelectorAll(".it").forEach(e=>{e.draggable=true;e.ondragstart=ev=>{cur=e;ev.dataTransfer.setData("text","x");e.classList.add("sel")};
+  e.onclick=()=>{$$(".it.sel").forEach(s=>s.classList.remove("sel"));cur=e;e.classList.add("sel")}});
+ root.querySelectorAll(".zn").forEach(z=>{z.ondragover=e=>e.preventDefault();
+  const put=()=>{if(!cur)return;if(z.classList.contains("one")){const o=z.querySelector(".it");if(o)root.querySelector(".pool").appendChild(o)}z.appendChild(cur);cur.classList.remove("sel");cur=null};
+  z.ondrop=e=>{e.preventDefault();put()};z.onclick=e=>{if(!e.target.classList.contains("it"))put()}})}
+
+/* ---------- Games ---------- */
+const GI=[["O₂ masuk alveolus",0],["Pompa Na⁺-K⁺",1],["Osmosis air ke sel akar",0],["Eksositosis insulin",1],["Gula larut dalam teh",0],["Fagositosis bakteri",1],["Difusi glukosa via GLUT",0],["Akar menyerap ion mineral",1]];
+const WT="Difusi adalah perpindahan zat dari konsentrasi {tinggi} ke {rendah} tanpa memerlukan {ATP}. Osmosis adalah difusi {air} melalui membran {semipermeabel}. Transpor aktif bergerak {melawan} gradien konsentrasi.";
+const MP=[["Difusi","Tinggi → rendah, tanpa ATP"],["Osmosis","Perpindahan air lewat semipermeabel"],["Pompa Na⁺-K⁺","Transpor aktif memakai ATP"],["Fagositosis","Sel menelan partikel padat"],["Hipotonis","Sel tumbuhan menjadi turgid"],["Hipertonis","Sel hewan mengkerut (krenasi)"]];
+function games(){$("#gt").innerHTML="";["Drag & Drop","Drag the Words","Memory"].forEach((n,i)=>{const b=document.createElement("button");b.className="b";b.textContent=n;b.onclick=()=>gs(i);$("#gt").appendChild(b)});gs(0)}
+function gs(i){$$("#gt .b").forEach((b,j)=>b.classList.toggle("on",i==j));$$(".gp").forEach((g,j)=>g.style.display=i==j?"block":"none");[g1,g2,g3][i]();log({aktivitas:"Game "+(i+1)})}
+function g1(){const r=$("#g0");r.innerHTML=`<h3>Kelompokkan: Pasif atau Aktif?</h3><p>Seret kartu ke kotak yang tepat (di HP: ketuk kartu, lalu ketuk kotak).</p><div class="zn pool">${shuf(GI.map((g,i)=>`<span class="it" data-c="${g[1]}">${g[0]}</span>`)).join("")}</div><div class="zs"><div class="zn" data-c="0"><span class="zt">Transpor Pasif</span></div><div class="zn" data-c="1"><span class="zt">Transpor Aktif</span></div></div><div class="row"><button class="b" id="c1">Periksa</button><button class="b" id="r1">Reset</button></div><b id="m1"></b>`;
+ mkDD(r);$("#r1").onclick=g1;$("#c1").onclick=()=>{let ok=0;$$("#g0 .zs .it").forEach(e=>{const g=e.dataset.c==e.parentNode.dataset.c;e.classList.add(g?"g":"r");ok+=g});$("#m1").textContent=`Benar ${ok} dari ${GI.length}${ok==GI.length?" 🎉 Hebat!":""}`;log({aktivitas:"Skor Game DragDrop",skor:ok})}}
+function g2(){const a=[],h=WT.split(/\{(.*?)\}/).map((p,i)=>i%2?(a.push(p),`<span class="zn one" data-a="${p}"></span>`):p).join("");const r=$("#g1");
+ r.innerHTML=`<h3>Lengkapi kalimat</h3><p style="line-height:2.4">${h}</p><div class="zn pool">${shuf(a).map(w=>`<span class="it">${w}</span>`).join("")}</div><div class="row"><button class="b" id="c2">Periksa</button><button class="b" id="r2">Reset</button></div><b id="m2"></b>`;
+ mkDD(r);$("#r2").onclick=g2;$("#c2").onclick=()=>{let ok=0;$$("#g1 .one").forEach(z=>{const e=z.querySelector(".it");if(e){const g=e.textContent==z.dataset.a;e.classList.remove("g","r");e.classList.add(g?"g":"r");ok+=g}});$("#m2").textContent=`Benar ${ok} dari ${a.length}${ok==a.length?" 🎉":""}`;log({aktivitas:"Skor Game Words",skor:ok})}}
+function g3(){const cs=shuf(MP.flatMap((p,i)=>[{i,t:p[0]},{i,t:p[1]}]));let fl=[],mv=0,ok=0,lock=false;
+ $("#g2").innerHTML=`<h3>Pasangkan istilah dan artinya</h3><p>Langkah: <b id="mv">0</b> | Pasangan: <b id="mo">0</b>/${MP.length}</p><div class="mg">${cs.map((c,j)=>`<div class="mc" data-j="${j}"><div class="in"><div class="fr">?</div><div class="bk">${c.t}</div></div></div>`).join("")}</div><div class="row"><button class="b" id="r3">Reset</button></div><b id="m3"></b>`;
+ $("#r3").onclick=g3;
+ $$("#g2 .mc").forEach(m=>m.onclick=()=>{if(lock||m.classList.contains("f")||m.classList.contains("m"))return;m.classList.add("f");fl.push(m);
+  if(fl.length==2){mv++;$("#mv").textContent=mv;const [a,b]=fl;
+   if(cs[a.dataset.j].i==cs[b.dataset.j].i){a.classList.replace("f","m");b.classList.replace("f","m");ok++;$("#mo").textContent=ok;fl=[];if(ok==MP.length){$("#m3").textContent=`🎉 Selesai dalam ${mv} langkah!`;log({aktivitas:"Game Memory selesai",skor:mv})}}
+   else{lock=true;setTimeout(()=>{a.classList.remove("f");b.classList.remove("f");fl=[];lock=false},800)}}})}
+
+/* ---------- Evaluasi ---------- */
+const SC=[["Perpindahan zat tanpa ATP dari konsentrasi tinggi ke rendah disebut ...",["Transpor aktif","Transpor pasif","Endositosis","Eksositosis"],1],
+["Model membran sel dari Singer dan Nicolson adalah ...",["Sandwich","Unit membran","Mosaik cair","Kisi protein"],2],
+["Osmosis adalah perpindahan ... melalui membran semipermeabel.",["Ion Na⁺","Glukosa","Air","Protein"],2],
+["Sel darah merah dalam larutan hipertonis akan ...",["Lisis","Krenasi","Tetap normal","Turgid"],1],
+["Pompa natrium-kalium memindahkan ...",["3 Na⁺ keluar, 2 K⁺ masuk","2 Na⁺ keluar, 3 K⁺ masuk","3 Na⁺ masuk, 2 K⁺ keluar","Na⁺ dan K⁺ keluar"],0],
+["Glukosa masuk sel dengan protein pembawa tanpa ATP disebut ...",["Difusi sederhana","Difusi terfasilitasi","Pompa proton","Fagositosis"],1],
+["Sel tumbuhan dalam larutan hipotonis akan menjadi ...",["Plasmolisis","Krenasi","Turgid","Lisis"],2],
+["Amoeba menelan partikel makanan padat melalui ...",["Pinositosis","Fagositosis","Eksositosis","Osmosis"],1],
+["Larutan dengan zat terlarut lebih rendah daripada isi sel disebut ...",["Hipertonis","Isotonis","Hipotonis","Hiperosmotik"],2],
+["Pertukaran O₂ dan CO₂ di alveolus terjadi secara ...",["Transpor aktif","Difusi sederhana","Endositosis","Pompa ion"],1]];
+const DDQ=[["Kelompokkan: Pasif atau Aktif",["Pasif","Aktif"],[["O₂ masuk alveolus",0],["Pompa Na⁺-K⁺",1],["Osmosis",0],["Eksositosis",1]]],
+["Kelompokkan: Pasif atau Aktif",["Pasif","Aktif"],[["Difusi terfasilitasi",0],["Endositosis",1],["Difusi sederhana",0],["Pompa proton",1]]],
+["Kelompokkan kondisi sel: Hipotonis atau Hipertonis",["Hipotonis","Hipertonis"],[["Sel membengkak",0],["Sel krenasi",1],["Air masuk sel",0],["Air keluar sel",1]]],
+["Kelompokkan: Tanpa ATP atau Memakai ATP",["Tanpa ATP","Memakai ATP"],[["Osmosis",0],["Pinositosis",1],["Difusi",0],["Pompa Na⁺-K⁺",1]]],
+["Kelompokkan contoh kontekstual: Pasif atau Aktif",["Pasif","Aktif"],[["Gula menyebar di teh",0],["Akar menyerap ion mineral",1],["Sayur layu direndam air",0],["Leukosit menelan bakteri",1]]]];
+const MCQ=[["Faktor yang memengaruhi laju difusi (pilih semua yang benar):",["Suhu","Gradien konsentrasi","Luas permukaan","Warna zat"],[0,1,2]],
+["Yang termasuk transpor pasif (pilih semua yang benar):",["Osmosis","Difusi terfasilitasi","Difusi sederhana","Pompa Na⁺-K⁺"],[0,1,2]],
+["Ciri transpor aktif (pilih semua yang benar):",["Memerlukan ATP","Melawan gradien konsentrasi","Melibatkan protein pembawa","Menuju konsentrasi lebih rendah"],[0,1,2]],
+["Penyusun membran sel (pilih semua yang benar):",["Fosfolipid","Protein","Kolesterol","Selulosa"],[0,1,2]],
+["Transpor melalui vesikel (pilih semua yang benar):",["Endositosis","Eksositosis","Fagositosis","Osmosis"],[0,1,2]]];
+const E=[...SC.map(([q,o,a])=>({k:"sc",q,o,a})),...DDQ.map(([q,c,it])=>({k:"dd",q,c,it})),...MCQ.map(([q,o,a])=>({k:"mc",q,o,a}))];
+let ev={i:0,a:[],run:false};
+function evIntro(){ev={i:0,a:[],run:false};$("#ev").innerHTML=`<div class="card"><h3>Petunjuk Pengerjaan</h3><ol><li>Terdapat <b>20 soal</b>: 10 pilihan tunggal, 5 drag &amp; drop, dan 5 pilihan ganda (lebih dari satu jawaban).</li><li>Satu soal ditampilkan pada satu halaman.</li><li>Pilihan tunggal: pilih satu jawaban. Pilihan ganda: centang semua jawaban benar.</li><li>Drag &amp; drop: seret kartu ke kelompok yang tepat (di HP: ketuk kartu, lalu ketuk kotak).</li><li>Setiap soal bernilai 5 poin, skor maksimal 100.</li><li>Skor dan saran belajar tampil di akhir. Kamu boleh mengulang.</li></ol><button class="b" id="st">Mulai Evaluasi</button></div>`;
+ $("#st").onclick=()=>{ev.run=true;log({aktivitas:"Mulai Evaluasi"});evQ()}}
+function evQ(){const e=E[ev.i],n=ev.i+1;let h=`<div class="bar"><i style="width:${n/E.length*100}%"></i></div><div class="card"><small>Soal ${n} dari ${E.length}</small><h3>${e.q}</h3>`;
+ if(e.k=="dd")h+=`<div class="dd" id="dq"><div class="zn pool">${shuf(e.it.map((x,i)=>`<span class="it" data-i="${i}">${x[0]}</span>`)).join("")}</div><div class="zs">${e.c.map((c,i)=>`<div class="zn" data-c="${i}"><span class="zt">${c}</span></div>`).join("")}</div></div>`;
+ else e.o.forEach((o,i)=>h+=`<label class="op"><input type="${e.k=="sc"?"radio":"checkbox"}" name="o" value="${i}">${o}</label>`);
+ h+=`</div><button class="b" id="nx">${n==E.length?"Selesai":"Lanjut"}</button>`;$("#ev").innerHTML=h;if(e.k=="dd")mkDD($("#dq"));
+ $("#nx").onclick=()=>{if(e.k=="dd")ev.a[ev.i]=$$("#dq .it").map(x=>({i:+x.dataset.i,c:x.parentNode.dataset.c==null?-1:+x.parentNode.dataset.c}));
+  else{const v=$$("#ev input:checked").map(x=>+x.value);ev.a[ev.i]=e.k=="sc"?(v.length?v[0]:-1):v}
+  if(ev.i<E.length-1){ev.i++;evQ()}else evEnd()}}
+function evEnd(){const t={sc:0,dd:0,mc:0};
+ E.forEach((e,i)=>{const a=ev.a[i];let ok=false;
+  if(e.k=="sc")ok=a===e.a;else if(e.k=="mc")ok=Array.isArray(a)&&a.length==e.a.length&&a.every(x=>e.a.includes(x));
+  else ok=Array.isArray(a)&&a.length==e.it.length&&a.every(x=>x.c==e.it[x.i][1]);if(ok)t[e.k]++});
+ const b=t.sc+t.dd+t.mc,sk=b*5;ev.run=false;
+ const w=[["sc",t.sc/10,"konsep dasar (istilah, osmosis, tonisitas)"],["dd",t.dd/5,"membedakan transpor pasif dan aktif"],["mc",t.mc/5,"ciri dan faktor transpor membran"]].sort((x,y)=>x[1]-y[1])[0];
+ const sr=sk>=80?"Sangat baik! Lanjutkan dengan soal HOTS atau kaitkan dengan penyerapan nutrien di usus.":sk>=60?`Cukup baik. Perdalam lagi bagian ${w[2]}, ulangi Teori dan Games.`:`Ayo belajar lagi. Ulangi Teori, Video, dan LKPD, terutama ${w[2]}.`;
+ log({aktivitas:"Evaluasi selesai",skor:sk,benar:b,saran:sr});
+ $("#ev").innerHTML=`<div class="card" style="text-align:center"><div class="big">${sk}</div><p>Benar ${b} dari 20 soal</p></div><div class="card"><h3>Ringkasan Hasil</h3><table><tr><th>Nama</th><td>${U.nama}</td></tr><tr><th>NISN</th><td>${U.nisn}</td></tr><tr><th>Kelas</th><td>${U.kelas}</td></tr><tr><th>Skor</th><td>${sk}</td></tr><tr><th>Rincian</th><td>Pilihan tunggal ${t.sc}/10, Drag &amp; drop ${t.dd}/5, Pilihan ganda ${t.mc}/5</td></tr><tr><th>Saran belajar</th><td>${sr}</td></tr></table></div><div class="row"><button class="b" id="rt">Ulangi Evaluasi</button><button class="b" id="dl">Unduh data (CSV)</button></div>`;
+ $("#rt").onclick=evIntro;$("#dl").onclick=csv}
+
+/* ---------- Refleksi ---------- */
+const RS=["Saya dapat menjelaskan perbedaan transpor pasif dan transpor aktif.","Saya memahami arah gerak air pada osmosis.","Saya dapat memberi contoh transpor membran dalam kehidupan sehari-hari.","Saya mampu membedakan larutan hipotonis, isotonis, dan hipertonis.","Saya menikmati belajar dengan media interaktif ini.","Saya siap mengerjakan soal evaluasi dengan percaya diri."];
+function refl(){$("#rf").innerHTML=`<div class="card"><p>Pilih jawaban yang paling sesuai dengan dirimu.</p>${RS.map((s,i)=>`<p><b>${i+1}. ${s}</b></p><div class="row">${["Ya","Ragu-ragu","Belum"].map(o=>`<label class="op"><input type="radio" name="r${i}" value="${o}">${o}</label>`).join("")}</div>`).join("")}<button class="b" id="rk">Kirim Refleksi</button><p id="rm" class="fb"></p></div>`;
+ $("#rk").onclick=()=>{const v=RS.map((s,i)=>($(`input[name=r${i}]:checked`)||{}).value);if(v.includes(undefined)){$("#rm").className="fb no";$("#rm").textContent="Jawab semua pernyataan dahulu.";return}
+  const y=v.filter(x=>x=="Ya").length;$("#rm").className="fb ok";$("#rm").textContent=y>=5?"Luar biasa! Kamu sudah memahami materi dengan baik.":y>=3?"Bagus! Ulangi bagian yang masih ragu-ragu.":"Tidak apa-apa. Ulangi Teori dan LKPD, lalu coba lagi.";
+  log({aktivitas:"Refleksi",jawaban:v.join("/")})}}
+
+if(U){$("#nm").value=U.nama}
+</script>
+</body>
+</html>
